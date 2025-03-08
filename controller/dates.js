@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-// Saving date
+// SAVE DATE
 const saveDate = (newDate) => {
   try {
     const dates = fs.readFileSync("../data/date.json", "utf8");
@@ -22,8 +22,29 @@ const saveDate = (newDate) => {
     console.error("Error reading file:", err);
   }
 };
+// UPDATE DATE JSON FILE
+const upDateDates = (dateToBeChanged) => {
+  try {
+    const dates = fs.readFileSync("../data/date.json", "utf8");
 
-// Process date
+    // Parse JSON date data
+    const parsedDate = JSON.parse(dates);
+    // Find matched date, update and saved new lists of date in new Array
+    const updatedDates = parsedDate.map((dateObject) => {
+      if (dateObject.readableDate === dateToBeChanged.requestedDate) {
+        dateObject.status = dateToBeChanged.status;
+        dateObject.message = dateToBeChanged.message;
+      }
+      return dateObject;
+    });
+    // Update JSON file containing special dates by overiding with new dates
+    fs.writeFileSync("../data/date.json", JSON.stringify(updatedDates));
+  } catch (err) {
+    console.error("Error reading file:", err);
+  }
+};
+// PROCESS DATE
+
 const processDate = (res, req) => {
   const currentDate = new Date(); // Get current date
   const unixTime = Math.floor(currentDate.getTime() / 1000); // Convert to Unix time
@@ -43,4 +64,11 @@ const processDate = (res, req) => {
   saveDate(dateObject);
 };
 
-processDate();
+// processDate();
+
+const sampleDate = {
+  requestedDate: "2025-03-08, 10:33:25 a.m.",
+  status: "closed",
+  message: "Losar",
+};
+upDateDates(sampleDate);
