@@ -1,5 +1,14 @@
 const fs = require("fs");
 
+// Saving date
+const saveDate = (date) => {
+  try {
+    const data = fs.readFileSync("../data/date.json", "utf8");
+    console.log("day:", JSON.parse(data).day);
+  } catch (err) {
+    console.error("Error reading file:", err);
+  }
+};
 // Arrow function to get the current date in Unix format and store in JSON file
 const saveDateToJSON = (res, req) => {
   const currentDate = new Date(); // Get current date
@@ -23,4 +32,5 @@ const saveDateToJSON = (res, req) => {
 };
 
 // Call function
-saveDateToJSON();
+// saveDateToJSON();
+saveDate();
