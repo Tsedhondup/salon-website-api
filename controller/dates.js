@@ -31,7 +31,7 @@ const upDateDates = (dateToBeChanged) => {
     const parsedDate = JSON.parse(dates);
     // Find matched date, update and saved new lists of date in new Array
     const updatedDates = parsedDate.map((dateObject) => {
-      if (dateObject.readableDate === dateToBeChanged.requestedDate) {
+      if (dateObject.readableDate === dateToBeChanged.date) {
         dateObject.status = dateToBeChanged.status;
         dateObject.message = dateToBeChanged.message;
       }
@@ -39,6 +39,23 @@ const upDateDates = (dateToBeChanged) => {
     });
     // Update JSON file containing special dates by overiding with new dates
     fs.writeFileSync("../data/date.json", JSON.stringify(updatedDates));
+  } catch (err) {
+    console.error("Error reading file:", err);
+  }
+};
+// DELETE SPECIAL DATE
+const deleteSpecialDate = (dateToBeDeleted) => {
+  try {
+    const dates = fs.readFileSync("../data/date.json", "utf8");
+
+    // Parse JSON date data
+    const parsedDate = JSON.parse(dates);
+    // Remove targeted special date and save new dates in new Array
+    const filteredDates = parsedDate.filter((dateObject) => {
+      return dateObject.readableDate != dateToBeDeleted.date;
+    });
+    // Update JSON file containing special dates by overiding with new dates
+    fs.writeFileSync("../data/date.json", JSON.stringify(filteredDates));
   } catch (err) {
     console.error("Error reading file:", err);
   }
@@ -67,8 +84,8 @@ const processDate = (res, req) => {
 // processDate();
 
 const sampleDate = {
-  requestedDate: "2025-03-08, 10:33:25 a.m.",
+  date: "2025-03-08, 10:33:25 a.m.",
   status: "closed",
   message: "Losar",
 };
-upDateDates(sampleDate);
+deleteSpecialDate(sampleDate);
